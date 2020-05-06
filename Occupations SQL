@@ -1,0 +1,16 @@
+select Doctor, Professor, Singer, Actor
+from
+(
+select row_number() over (partition by occupation order by name) as rn, * from occupations
+) as T
+pivot
+(
+    max(name) for occupation in (Doctor, Professor, Singer, Actor)
+) as P
+
+
+Details:
+
+So basically the inside query gives the row numbers by partitioning the table based on the occupation and ordering it by name!
+Then the pivot operation does the rest by inverting the table as Doctor, Professor, Singer, Actor
+Max is just a function used to get the value. It does not matter if we use max or min because there is only one value in that particular row
